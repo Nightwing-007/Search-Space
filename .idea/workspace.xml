@@ -4,21 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b6a24cff-ea9a-4744-ad5e-21e758790597" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/visualizer/algorithms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AI_SearchLab/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/AI_SearchLab/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/theme/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/sample_graph.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/theme/apps.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/theme/static_src/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/theme/static_src/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/theme/static_src/postcss.config.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/theme/static_src/src/styles.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/theme/templates/base.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/visualizer/templates/visualizer/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/visualizer/templates/visualizer/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visualizer/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/visualizer/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visualizer/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/visualizer/views.py" afterDir="false" />
-    </list>
+    <list default="true" id="b6a24cff-ea9a-4744-ad5e-21e758790597" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -130,7 +116,7 @@
       <workItem from="1760366626132" duration="326000" />
       <workItem from="1760367049474" duration="665000" />
       <workItem from="1760368431746" duration="153000" />
-      <workItem from="1760368593419" duration="3738000" />
+      <workItem from="1760368593419" duration="4001000" />
     </task>
     <servers />
   </component>
