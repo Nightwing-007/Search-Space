@@ -1,0 +1,185 @@
+# visualizer/algorithms.py
+import heapq
+import math
+
+def bfs(graph, start, goal):
+    visited = set()
+    queue = [[start]]
+    visited_order = []
+
+    if start == goal:
+        return [start], [start]
+
+    while queue:
+        path = queue.pop(0)
+        node = path[-1]
+
+        if node not in visited:
+            visited_order.append(node)
+            neighbors = graph.get(node, [])
+            for neighbor in neighbors:
+                new_path = list(path)
+                new_path.append(neighbor)
+                queue.append(new_path)
+
+                if neighbor == goal:
+                    # Add final path nodes to visited_order for full animation
+                    visited_order.extend(new_path[len(path):])
+                    return visited_order, new_path
+            visited.add(node)
+    return visited_order, []
+
+def dfs(graph, start, goal):
+    visited = set()
+    stack = [[start]]
+    visited_order = []
+
+    if start == goal:
+        return [start], [start]
+
+    while stack:
+        path = stack.pop()
+        node = path[-1]
+
+        if node not in visited:
+            visited_order.append(node)
+            if node == goal:
+                return visited_order, path
+            visited.add(node)
+            neighbors = graph.get(node, [])
+            for neighbor in reversed(neighbors): # To match visual expectations
+                if neighbor not in visited:
+                    new_path = list(path)
+                    new_path.append(neighbor)
+                    stack.append(new_path)
+    return visited_order, []
+
+
+def astar(graph, start, goal, positions, rules=None):
+    # A* needs a heuristic, we'll use Euclidean distance
+    def heuristic(node1, node2):
+        pos1 = positions.get(node1)
+        pos2 = positions.get(node2)
+        if not pos1 or not pos2: return 0
+        return math.sqrt((pos1['x'] - pos2['x']) ** 2 + (pos1['y'] - pos2['y']) ** 2)
+
+    # Parse rules (for Logic-Gated search)
+    avoid_nodes = set()
+    if rules:
+        for rule in rules.replace(" ", "").split(','):
+            if rule.upper().startswith("AVOID("):
+                node_to_avoid = rule[6:-1]
+                avoid_nodes.add(node_to_avoid)
+
+    pq = [(0, [start])] # (total_cost, path)
+    visited = set()
+    visited_order = []
+    g_costs = {start: 0}
+
+    while pq:
+        cost, path = heapq.heappop(pq)
+        node = path[-1]
+
+        if node in visited:
+            continue
+
+        visited.add(node)
+        visited_order.append(node)
+
+        if node == goal:
+            return visited_order, path
+
+        for neighbor in graph.get(node, []):
+            if neighbor in visited or neighbor in avoid_nodes:
+                continue
+
+            # Cost from one node to another is the distance
+            new_g_cost = g_costs[node] + heuristic(node, neighbor)
+
+            if neighbor not in g_costs or new_g_cost < g_costs[neighbor]:
+                g_costs[neighbor] = new_g_cost
+                f_cost = new_g_cost + heuristic(neighbor, goal)
+                new_path = path + [neighbor]
+                heapq.heappush(pq, (f_cost, new_path))
+
+    return visited_order, []
+
+
+# visualizer/algorithms.py
+
+# ... (keep your existing bfs, dfs, and astar functions) ...
+
+def dijkstra(graph, start, goal, positions):
+    # Heuristic function is used here to calculate edge weights (distance)
+    def get_weight(node1, node2):
+        pos1 = positions.get(node1)
+        pos2 = positions.get(node2)
+        if not pos1 or not pos2: return 1  # Default weight if no position
+        return math.sqrt((pos1['x'] - pos2['x']) ** 2 + (pos1['y'] - pos2['y']) ** 2)
+
+    pq = [(0, [start])]  # (distance, path)
+    visited = set()
+    visited_order = []
+    min_distances = {node: float('inf') for node in graph}
+    min_distances[start] = 0
+
+    while pq:
+        dist, path = heapq.heappop(pq)
+        node = path[-1]
+
+        if node in visited:
+            continue
+
+        visited.add(node)
+        visited_order.append(node)
+
+        if node == goal:
+            return visited_order, path
+
+        if dist > min_distances[node]:
+            continue
+
+        for neighbor in graph.get(node, []):
+            if neighbor not in visited:
+                weight = get_weight(node, neighbor)
+                new_dist = dist + weight
+
+                if new_dist < min_distances[neighbor]:
+                    min_distances[neighbor] = new_dist
+                    new_path = path + [neighbor]
+                    heapq.heappush(pq, (new_dist, new_path))
+
+    return visited_order, []
+
+
+def greedy_bfs(graph, start, goal, positions):
+    # Heuristic is the estimated distance to the goal (Euclidean distance)
+    def heuristic(node, goal_node):
+        pos1 = positions.get(node)
+        pos2 = positions.get(goal_node)
+        if not pos1 or not pos2: return 0
+        return math.sqrt((pos1['x'] - pos2['x']) ** 2 + (pos1['y'] - pos2['y']) ** 2)
+
+    pq = [(heuristic(start, goal), [start])]  # (heuristic_cost, path)
+    visited = set()
+    visited_order = []
+
+    while pq:
+        _, path = heapq.heappop(pq)
+        node = path[-1]
+
+        if node in visited:
+            continue
+
+        visited.add(node)
+        visited_order.append(node)
+
+        if node == goal:
+            return visited_order, path
+
+        for neighbor in sorted(graph.get(node, [])):  # Sort for consistent behavior
+            if neighbor not in visited:
+                new_path = path + [neighbor]
+                heapq.heappush(pq, (heuristic(neighbor, goal), new_path))
+
+    return visited_order, []
