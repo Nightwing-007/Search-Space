@@ -8,6 +8,8 @@ from django.contrib.auth.forms import UserCreationForm
 import json
 from . import algorithms
 from .models import Graph
+from sklearn.cluster import KMeans
+import numpy as np
 
 @login_required
 def index(request):
@@ -102,3 +104,36 @@ def register_view(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+@login_required
+def find_clusters(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            graph_data = data.get('graph_data')
+            k = int(data.get('k', 3)) # Number of clusters, default to 3
+
+            if not graph_data:
+                return JsonResponse({'status': 'error', 'message': 'Graph data is required.'}, status=400)
+
+            nodes = graph_data.get('nodes', {})
+            # We need to ensure a consistent order for clustering
+            node_ids = sorted(nodes.keys())
+            # Create a list of coordinates
+            coordinates = np.array([ [nodes[nid]['x'], nodes[nid]['y']] for nid in node_ids ])
+
+            if len(coordinates) < k:
+                 return JsonResponse({'status': 'error', 'message': 'Number of clusters cannot be greater than the number of nodes.'}, status=400)
+
+            # Run K-Means algorithm
+            kmeans = KMeans(n_clusters=k, random_state=0, n_init='auto').fit(coordinates)
+            labels = kmeans.labels_
+
+            # Add the cluster_id back to each node in the original graph data
+            for i, node_id in enumerate(node_ids):
+                graph_data['nodes'][node_id]['cluster_id'] = int(labels[i])
+
+            return JsonResponse({'status': 'success', 'graph_data': graph_data})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)

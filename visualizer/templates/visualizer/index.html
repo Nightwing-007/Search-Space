@@ -102,119 +102,117 @@
         const resetBtn = document.getElementById('reset-btn');
         const depthLimitContainer = document.getElementById('depth-limit-container');
         const depthLimitInput = document.getElementById('depth-limit-input');
-        // New DB selectors
         const saveGraphNameInput = document.getElementById('save-graph-name');
         const saveGraphBtn = document.getElementById('save-graph-btn');
         const loadGraphSelect = document.getElementById('load-graph-select');
+        const findClustersBtn = document.getElementById('find-clusters-btn');
+        const clustersInput = document.getElementById('clusters-input');
 
         let graphData = null;
-        let savedGraphs = []; // To store loaded graphs
+        let savedGraphs = [];
         let vizState = { visitedOrder: [], path: [], currentIndex: 0, isComplete: true };
 
         function getCsrfToken() { return document.querySelector('input[name="csrfmiddlewaretoken"]').value; }
-        function renderGraph() { /* ... Your full renderGraph function here ... */ }
-        function setupVisualization(results) { /* ... Your full setupVisualization function here ... */ }
-        function handleNextStep() { /* ... Your full handleNextStep function here ... */ }
-        function highlightFinalPath() { /* ... Your full highlightFinalPath function here ... */ }
-        function resetVisualization() { /* ... Your full resetVisualization function here ... */ }
 
-        // --- FULL RENDER/VIZ FUNCTIONS (COPY-PASTE THESE) ---
-        function renderGraph(){if(!graphData||!graphData.nodes||!graphData.edges){graphContainer.innerHTML='<p class="text-gray-500 text-center">Upload a graph file to begin.</p>';return}graphContainer.innerHTML='';const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");svg.setAttribute('width','100%');svg.setAttribute('height','100%');let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;Object.values(graphData.nodes).forEach(n=>{if(n.x<minX)minX=n.x;if(n.x>maxX)maxX=n.x;if(n.y<minY)minY=n.y;if(n.y>maxY)maxY=n.y;});const padding=50;svg.setAttribute('viewBox',`${minX-padding} ${minY-padding} ${maxX-minX+padding*2} ${maxY-minY+padding*2}`);graphContainer.appendChild(svg);const edgeGroup=document.createElementNS("http://www.w3.org/2000/svg","g");svg.appendChild(edgeGroup);graphData.edges.forEach(edge=>{const[u,v]=edge;const nodeU=graphData.nodes[u];const nodeV=graphData.nodes[v];if(!nodeU||!nodeV)return;const line=document.createElementNS("http://www.w3.org/2000/svg","line");line.setAttribute('x1',nodeU.x);line.setAttribute('y1',nodeU.y);line.setAttribute('x2',nodeV.x);line.setAttribute('y2',nodeV.y);line.setAttribute('stroke','#4A5568');line.setAttribute('stroke-width','2');line.id=`edge-${u}-${v}`;edgeGroup.appendChild(line)});const nodeGroup=document.createElementNS("http://www.w3.org/2000/svg","g");svg.appendChild(nodeGroup);Object.keys(graphData.nodes).forEach(nodeId=>{const node=graphData.nodes[nodeId];const g=document.createElementNS("http://www.w3.org/2000/svg","g");g.id=`node-${nodeId}`;g.style.cursor='pointer';const circle=document.createElementNS("http://www.w3.org/2000/svg","circle");circle.setAttribute('cx',node.x);circle.setAttribute('cy',node.y);circle.setAttribute('r','15');circle.setAttribute('fill','#2D3748');circle.setAttribute('stroke','#A0AEC0');circle.setAttribute('stroke-width','2');circle.style.transition='fill 0.3s ease';g.appendChild(circle);const text=document.createElementNS("http://www.w3.org/2000/svg","text");text.setAttribute('x',node.x);text.setAttribute('y',node.y);text.setAttribute('text-anchor','middle');text.setAttribute('dy','.3em');text.setAttribute('fill','white');text.setAttribute('font-size','14px');text.textContent=nodeId;g.appendChild(text);nodeGroup.appendChild(g)})}
-        function setupVisualization(results){vizState.visitedOrder=results.visited_order;vizState.path=results.path_to_goal;vizState.currentIndex=0;vizState.isComplete=false;runSearchBtn.disabled=true;runSearchBtn.classList.add('cursor-not-allowed','bg-gray-500');nextStepBtn.disabled=false;nextStepBtn.classList.remove('cursor-not-allowed','bg-gray-500');nextStepBtn.classList.add('bg-green-600','hover:bg-green-700');resetBtn.disabled=false;resetBtn.classList.remove('cursor-not-allowed');statusMessage.innerText='Ready! Click "Next Step" to begin.'}
-        function handleNextStep(){if(vizState.isComplete)return;const nodeId=vizState.visitedOrder[vizState.currentIndex];const nodeElement=document.querySelector(`#node-${nodeId} circle`);if(nodeElement){nodeElement.setAttribute('fill','#6B46C1')}statusMessage.innerText=`Step ${vizState.currentIndex+1} / ${vizState.visitedOrder.length}: Visiting node ${nodeId}`;vizState.currentIndex++;if(vizState.currentIndex>=vizState.visitedOrder.length){vizState.isComplete=true;nextStepBtn.disabled=true;nextStepBtn.classList.add('cursor-not-allowed','bg-gray-500');nextStepBtn.classList.remove('bg-green-600','hover:bg-green-700');highlightFinalPath()}}
-        function highlightFinalPath(){if(vizState.path&&vizState.path.length>0){statusMessage.innerText='Path found! Highlighting...';vizState.path.forEach(nodeId=>{const nodeElement=document.querySelector(`#node-${nodeId} circle`);if(nodeElement){nodeElement.setAttribute('fill','#38A169')}})}else{statusMessage.innerText='Search complete. No path found.'}}
-        function resetVisualization(){renderGraph();vizState={visitedOrder:[],path:[],currentIndex:0,isComplete:true};runSearchBtn.disabled=false;runSearchBtn.classList.remove('cursor-not-allowed','bg-gray-500');nextStepBtn.disabled=true;nextStepBtn.classList.add('cursor-not-allowed','bg-gray-500');nextStepBtn.classList.remove('bg-green-600','hover:bg-green-700');resetBtn.disabled=true;resetBtn.classList.add('cursor-not-allowed');statusMessage.innerText=''}
+        function renderGraph() {
+            if (!graphData || !graphData.nodes || !graphData.edges) {
+                graphContainer.innerHTML = '<p class="text-gray-500 text-center">Upload or load a graph to begin.</p>';
+                return;
+            }
 
-        // --- NEW DB FUNCTIONS ---
-        async function loadUserGraphs() {
-            const response = await fetch('/api/get-graphs/');
-            const data = await response.json();
-            savedGraphs = data.graphs;
-            loadGraphSelect.innerHTML = '<option value="">Select a graph...</option>'; // Reset
-            savedGraphs.forEach(graph => {
-                const option = document.createElement('option');
-                option.value = graph.id;
-                option.textContent = graph.name;
-                loadGraphSelect.appendChild(option);
+            const clusterColors = ['#4299E1', '#48BB78', '#ED8936', '#F56565', '#9F7AEA', '#ECC94B', '#38B2AC', '#ED64A6'];
+
+            graphContainer.innerHTML = ''; const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute('width', '100%'); svg.setAttribute('height', '100%');
+            let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+            Object.values(graphData.nodes).forEach(n => {
+                if (n.x < minX) minX = n.x; if (n.x > maxX) maxX = n.x;
+                if (n.y < minY) minY = n.y; if (n.y > maxY) maxY = n.y;
+            });
+            const padding = 50;
+            svg.setAttribute('viewBox', `${minX - padding} ${minY - padding} ${maxX - minX + padding*2} ${maxY - minY + padding*2}`);
+            graphContainer.appendChild(svg);
+            const edgeGroup = document.createElementNS("http://www.w3.org/2000/svg", "g"); svg.appendChild(edgeGroup);
+            graphData.edges.forEach(edge => {
+                const [u, v] = edge; const nodeU = graphData.nodes[u]; const nodeV = graphData.nodes[v]; if (!nodeU || !nodeV) return;
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute('x1', nodeU.x); line.setAttribute('y1', nodeU.y); line.setAttribute('x2', nodeV.x); line.setAttribute('y2', nodeV.y);
+                line.setAttribute('stroke', '#4A5568'); line.setAttribute('stroke-width', '2'); line.id = `edge-${u}-${v}`;
+                edgeGroup.appendChild(line);
+            });
+            const nodeGroup = document.createElementNS("http://www.w3.org/2000/svg", "g"); svg.appendChild(nodeGroup);
+            Object.keys(graphData.nodes).forEach(nodeId => {
+                const node = graphData.nodes[nodeId]; const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                g.id = `node-${nodeId}`; g.style.cursor = 'pointer';
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circle.setAttribute('cx', node.x); circle.setAttribute('cy', node.y); circle.setAttribute('r', '15');
+
+                if (node.cluster_id !== undefined) {
+                    circle.setAttribute('fill', clusterColors[node.cluster_id % clusterColors.length]);
+                } else {
+                    circle.setAttribute('fill', '#2D3748');
+                }
+
+                circle.setAttribute('stroke', '#A0AEC0'); circle.setAttribute('stroke-width', '2');
+                circle.style.transition = 'fill 0.3s ease'; g.appendChild(circle);
+                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.setAttribute('x', node.x); text.setAttribute('y', node.y); text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('dy', '.3em'); text.setAttribute('fill', 'white'); text.setAttribute('font-size', '14px');
+                text.textContent = nodeId; g.appendChild(text); nodeGroup.appendChild(g);
             });
         }
 
-        // --- EVENT LISTENERS ---
-        document.addEventListener('DOMContentLoaded', loadUserGraphs);
+        function setupVisualization(results){vizState.visitedOrder=results.visited_order;vizState.path=results.path_to_goal;vizState.currentIndex=0;vizState.isComplete=false;runSearchBtn.disabled=true;runSearchBtn.classList.add('cursor-not-allowed','bg-gray-500');nextStepBtn.disabled=false;nextStepBtn.classList.remove('cursor-not-allowed','bg-gray-500');nextStepBtn.classList.add('bg-green-600','hover:bg-green-700');resetBtn.disabled=false;resetBtn.classList.remove('cursor-not-allowed');statusMessage.innerText='Ready! Click "Next Step" to begin.'}
+        function handleNextStep(){if(vizState.isComplete)return;const nodeId=vizState.visitedOrder[vizState.currentIndex];const nodeElement=document.querySelector(`#node-${nodeId} circle`);if(nodeElement){nodeElement.setAttribute('fill','#6B46C1')}statusMessage.innerText=`Step ${vizState.currentIndex+1} / ${vizState.visitedOrder.length}: Visiting node ${nodeId}`;vizState.currentIndex++;if(vizState.currentIndex>=vizState.visitedOrder.length){vizState.isComplete=true;nextStepBtn.disabled=true;nextStepBtn.classList.add('cursor-not-allowed','bg-gray-500');nextStepBtn.classList.remove('bg-green-600','hover:bg-green-700');highlightFinalPath()}}
+        function highlightFinalPath(){if(vizState.path&&vizState.path.length>0){statusMessage.innerText='Path found! Highlighting...';vizState.path.forEach(nodeId=>{const nodeElement=document.querySelector(`#node-${nodeId} circle`);if(nodeElement){nodeElement.setAttribute('fill','#38A169')}})}else{statusMessage.innerText='Search complete. No path found.'}}
+        function resetVisualization(){if(graphData){Object.keys(graphData.nodes).forEach(nodeId=>delete graphData.nodes[nodeId].cluster_id)}renderGraph();vizState={visitedOrder:[],path:[],currentIndex:0,isComplete:true};runSearchBtn.disabled=false;runSearchBtn.classList.remove('cursor-not-allowed','bg-gray-500');nextStepBtn.disabled=true;nextStepBtn.classList.add('cursor-not-allowed','bg-gray-500');nextStepBtn.classList.remove('bg-green-600','hover:bg-green-700');resetBtn.disabled=true;resetBtn.classList.add('cursor-not-allowed');statusMessage.innerText=''}
 
-        graphFileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0]; if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try { graphData = JSON.parse(e.target.result); resetVisualization(); saveGraphNameInput.value = file.name.replace('.json', ''); }
-                catch (error) { statusMessage.innerText = 'Error: Invalid JSON file.'; graphData = null; }
-            };
-            reader.readAsText(file);
-        });
-
-        loadGraphSelect.addEventListener('change', () => {
-            const selectedId = loadGraphSelect.value;
-            if (!selectedId) return;
-            const selectedGraph = savedGraphs.find(g => g.id == selectedId);
-            if (selectedGraph) {
-                graphData = selectedGraph.graph_data;
-                resetVisualization();
-                saveGraphNameInput.value = selectedGraph.name;
-                statusMessage.innerText = `Loaded graph '${selectedGraph.name}'.`;
-            }
-        });
-
-        saveGraphBtn.addEventListener('click', async () => {
-            const name = saveGraphNameInput.value;
-            if (!name || !graphData) {
-                statusMessage.innerText = 'Enter a name and load a graph to save.';
-                return;
-            }
-            const payload = { name, graph_data: graphData };
-            const response = await fetch('/api/save-graph/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
-                body: JSON.stringify(payload)
-            });
-            const result = await response.json();
-            if (response.ok) {
-                statusMessage.innerText = result.message;
-                await loadUserGraphs(); // Refresh the dropdown
-            } else {
-                statusMessage.innerText = `Error: ${result.message}`;
-            }
-        });
-
-        algorithmSelect.addEventListener('change', () => {
-            depthLimitContainer.classList.toggle('hidden', algorithmSelect.value !== 'dls');
-        });
-
-        runSearchBtn.addEventListener('click', async () => {
+        async function findClusters() {
             if (!graphData) { statusMessage.innerText = 'Please load a graph first.'; return; }
-            resetVisualization();
-            const payload = {
-                graph_data: graphData, algorithm: algorithmSelect.value,
-                start_node: startNodeInput.value, goal_node: goalNodeInput.value,
-                rules: rulesInput.value, depth_limit: depthLimitInput.value
-            };
-            statusMessage.innerText = `Fetching path from server...`;
+            const k = clustersInput.value;
+            statusMessage.innerText = `Finding ${k} clusters...`;
             try {
-                const response = await fetch('/api/run-search/', {
+                const response = await fetch('/api/find-clusters/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({ graph_data: graphData, k: k })
                 });
-                const results = await response.json();
-                if (!response.ok) { throw new Error(results.message || 'Server error.'); }
-                setupVisualization(results);
+                const result = await response.json();
+                if (!response.ok) { throw new Error(result.message || 'Clustering failed.'); }
+                graphData = result.graph_data;
+                renderGraph();
+                statusMessage.innerText = `Successfully found ${k} clusters.`;
             } catch (error) {
-                console.error("Search failed:", error);
+                console.error("Clustering failed:", error);
                 statusMessage.innerText = `Error: ${error.message}`;
             }
-        });
+        }
 
+        async function loadUserGraphs() {
+            try {
+                const response = await fetch('/api/get-graphs/');
+                if (!response.ok) return;
+                const data = await response.json();
+                savedGraphs = data.graphs;
+                loadGraphSelect.innerHTML = '<option value="">Select a graph...</option>';
+                savedGraphs.forEach(graph => {
+                    const option = document.createElement('option');
+                    option.value = graph.id;
+                    option.textContent = graph.name;
+                    loadGraphSelect.appendChild(option);
+                });
+            } catch(e) { console.error("Could not load user graphs"); }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadUserGraphs);
+        graphFileInput.addEventListener('change', (e)=>{const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=(e)=>{try{graphData=JSON.parse(e.target.result);resetVisualization();saveGraphNameInput.value=file.name.replace('.json','')}catch(error){statusMessage.innerText='Error: Invalid JSON file.';graphData=null}};reader.readAsText(file)});
+        loadGraphSelect.addEventListener('change', ()=>{const selectedId=loadGraphSelect.value;if(!selectedId)return;const selectedGraph=savedGraphs.find(g=>g.id==selectedId);if(selectedGraph){graphData=selectedGraph.graph_data;resetVisualization();saveGraphNameInput.value=selectedGraph.name;statusMessage.innerText=`Loaded graph '${selectedGraph.name}'.`}});
+        saveGraphBtn.addEventListener('click', async ()=>{const name=saveGraphNameInput.value;if(!name||!graphData){statusMessage.innerText='Enter a name and load a graph to save.';return}const payload={name,graph_data:graphData};const response=await fetch('/api/save-graph/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCsrfToken()},body:JSON.stringify(payload)});const result=await response.json();if(response.ok){statusMessage.innerText=result.message;await loadUserGraphs()}else{statusMessage.innerText=`Error: ${result.message}`}});
+        algorithmSelect.addEventListener('change', ()=>{depthLimitContainer.classList.toggle('hidden',algorithmSelect.value!=='dls')});
+        runSearchBtn.addEventListener('click', async ()=>{if(!graphData){statusMessage.innerText='Please load a graph first.';return}resetVisualization();const payload={graph_data:graphData,algorithm:algorithmSelect.value,start_node:startNodeInput.value,goal_node:goalNodeInput.value,rules:rulesInput.value,depth_limit:depthLimitInput.value};statusMessage.innerText=`Fetching path from server...`;try{const response=await fetch('/api/run-search/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCsrfToken()},body:JSON.stringify(payload)});const results=await response.json();if(!response.ok){throw new Error(results.message||'Server error.')}setupVisualization(results)}catch(error){console.error("Search failed:",error);statusMessage.innerText=`Error: ${error.message}`}});
         nextStepBtn.addEventListener('click', handleNextStep);
         resetBtn.addEventListener('click', resetVisualization);
+        findClustersBtn.addEventListener('click', findClusters);
         window.addEventListener('resize', renderGraph);
     </script>
 </body>

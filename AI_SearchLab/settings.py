@@ -134,3 +134,6 @@ INTERNAL_IPS = [
 ]
 
 NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'index'
