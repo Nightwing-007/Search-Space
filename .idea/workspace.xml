@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b6a24cff-ea9a-4744-ad5e-21e758790597" name="Changes" comment="updating README and workspace.xml">
-      <change afterPath="$PROJECT_DIR$/hill_climbing.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/theme/static/css/dist/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/theme/static/css/dist/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visualizer/algorithms.py" beforeDir="false" afterPath="$PROJECT_DIR$/visualizer/algorithms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visualizer/templates/visualizer/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/visualizer/templates/visualizer/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visualizer/templates/visualizer/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/visualizer/templates/visualizer/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visualizer/templates/visualizer/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/visualizer/templates/visualizer/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visualizer/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/visualizer/views.py" afterDir="false" />
-    </list>
+    <list default="true" id="b6a24cff-ea9a-4744-ad5e-21e758790597" name="Changes" comment="updating README and workspace.xml" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -131,7 +121,7 @@
       <workItem from="1760368593419" duration="4001000" />
       <workItem from="1760372918021" duration="479000" />
       <workItem from="1760412682277" duration="978000" />
-      <workItem from="1760540679341" duration="3930000" />
+      <workItem from="1760540679341" duration="4228000" />
     </task>
     <task id="LOCAL-00001" summary="updating README and workspace.xml">
       <option name="closed" value="true" />
