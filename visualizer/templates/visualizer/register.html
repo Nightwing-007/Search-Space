@@ -4,26 +4,54 @@
 <head>
     <meta charset="UTF-8"><title>Register - AI SearchLab</title>
     {% tailwind_css %}
-    <style>body { font-family: 'Inter', sans-serif; }</style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Roboto Mono', monospace; }
+        .form-container {
+            background: rgba(10, 10, 10, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(18, 178, 19, 0.3);
+        }
+        /* Custom styling for Django form fields */
+        #id_username, #id_password1, #id_password2 {
+             width: 100%;
+             background-color: black;
+             border: 2px solid #4a5568;
+             border-radius: 0.375rem;
+             padding: 0.75rem;
+             color: #edf2f7;
+        }
+        #id_username:focus, #id_password1:focus, #id_password2:focus {
+            outline: none;
+            --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+            --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+            box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+            --tw-ring-color: rgb(18 178 19);
+            border-color: rgb(18 178 19);
+        }
+    </style>
 </head>
-<body class="bg-[#0b0f29] text-gray-200 flex items-center justify-center h-screen">
-    <div class="w-full max-w-md p-8 space-y-6 bg-[#161a38] rounded-lg shadow-lg">
-        <h1 class="text-2xl font-bold text-center">Create an Account</h1>
+<body class="bg-black text-gray-300 flex items-center justify-center h-screen p-4">
+    <div class="w-full max-w-md p-8 space-y-6 rounded-lg form-container">
+        <h1 class="text-3xl font-bold text-center text-[rgb(18,178,19)]">Create an Account</h1>
+
         <form method="post" class="space-y-4">
             {% csrf_token %}
             {% for field in form %}
-                <div class="space-y-1">
-                    <label for="{{ field.id_for_label }}" class="text-sm font-medium">{{ field.label }}</label>
-                    <input type="{{ field.field.widget.input_type }}" name="{{ field.name }}" id="{{ field.id_for_label }}"
-                        class="w-full bg-[#1e2347] border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-violet-500 focus:outline-none">
-                    {% if field.errors %}
-                        <p class="text-red-500 text-xs">{{ field.errors.as_text }}</p>
+                <div class="space-y-2">
+                    <label for="{{ field.id_for_label }}" class="text-sm font-semibold text-[rgb(18,178,19)]">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                      <p class="text-xs text-gray-500">{{ field.help_text|safe }}</p>
                     {% endif %}
+                    {% for error in field.errors %}
+                      <p class="text-red-500 text-xs">{{ error }}</p>
+                    {% endfor %}
                 </div>
             {% endfor %}
-            <button type="submit" class="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded-md">Register</button>
+            <button type="submit" class="w-full bg-[rgb(18,178,19)] text-black font-bold py-3 px-4 rounded-md hover:bg-opacity-80 transition-transform duration-200 hover:scale-105">Register</button>
         </form>
-        <p class="text-center text-sm">Already have an account? <a href="{% url 'login' %}" class="font-medium text-violet-400 hover:underline">Log in</a></p>
+        <p class="text-center text-sm">Already have an account? <a href="{% url 'login' %}" class="font-medium text-[rgb(18,178,19)] hover:underline">Log in</a></p>
     </div>
 </body>
 </html>

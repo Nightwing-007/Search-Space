@@ -1,4 +1,3 @@
-# visualizer/algorithms.py
 import heapq
 import math
 
@@ -23,7 +22,6 @@ def bfs(graph, start, goal):
                 queue.append(new_path)
 
                 if neighbor == goal:
-                    # Add final path nodes to visited_order for full animation
                     visited_order.extend(new_path[len(path):])
                     return visited_order, new_path
             visited.add(node)
@@ -47,7 +45,7 @@ def dfs(graph, start, goal):
                 return visited_order, path
             visited.add(node)
             neighbors = graph.get(node, [])
-            for neighbor in reversed(neighbors): # To match visual expectations
+            for neighbor in reversed(neighbors):
                 if neighbor not in visited:
                     new_path = list(path)
                     new_path.append(neighbor)
@@ -56,14 +54,12 @@ def dfs(graph, start, goal):
 
 
 def astar(graph, start, goal, positions, rules=None):
-    # A* needs a heuristic, we'll use Euclidean distance
     def heuristic(node1, node2):
         pos1 = positions.get(node1)
         pos2 = positions.get(node2)
         if not pos1 or not pos2: return 0
         return math.sqrt((pos1['x'] - pos2['x']) ** 2 + (pos1['y'] - pos2['y']) ** 2)
 
-    # Parse rules (for Logic-Gated search)
     avoid_nodes = set()
     if rules:
         for rule in rules.replace(" ", "").split(','):
@@ -71,7 +67,7 @@ def astar(graph, start, goal, positions, rules=None):
                 node_to_avoid = rule[6:-1]
                 avoid_nodes.add(node_to_avoid)
 
-    pq = [(0, [start])] # (total_cost, path)
+    pq = [(0, [start])]
     visited = set()
     visited_order = []
     g_costs = {start: 0}
@@ -93,7 +89,6 @@ def astar(graph, start, goal, positions, rules=None):
             if neighbor in visited or neighbor in avoid_nodes:
                 continue
 
-            # Cost from one node to another is the distance
             new_g_cost = g_costs[node] + heuristic(node, neighbor)
 
             if neighbor not in g_costs or new_g_cost < g_costs[neighbor]:
@@ -104,20 +99,14 @@ def astar(graph, start, goal, positions, rules=None):
 
     return visited_order, []
 
-
-# visualizer/algorithms.py
-
-# ... (keep your existing bfs, dfs, and astar functions) ...
-
 def dijkstra(graph, start, goal, positions):
-    # Heuristic function is used here to calculate edge weights (distance)
     def get_weight(node1, node2):
         pos1 = positions.get(node1)
         pos2 = positions.get(node2)
         if not pos1 or not pos2: return 1  # Default weight if no position
         return math.sqrt((pos1['x'] - pos2['x']) ** 2 + (pos1['y'] - pos2['y']) ** 2)
 
-    pq = [(0, [start])]  # (distance, path)
+    pq = [(0, [start])]
     visited = set()
     visited_order = []
     min_distances = {node: float('inf') for node in graph}
@@ -153,14 +142,13 @@ def dijkstra(graph, start, goal, positions):
 
 
 def greedy_bfs(graph, start, goal, positions):
-    # Heuristic is the estimated distance to the goal (Euclidean distance)
     def heuristic(node, goal_node):
         pos1 = positions.get(node)
         pos2 = positions.get(goal_node)
         if not pos1 or not pos2: return 0
         return math.sqrt((pos1['x'] - pos2['x']) ** 2 + (pos1['y'] - pos2['y']) ** 2)
 
-    pq = [(heuristic(start, goal), [start])]  # (heuristic_cost, path)
+    pq = [(heuristic(start, goal), [start])]
     visited = set()
     visited_order = []
 
@@ -177,7 +165,7 @@ def greedy_bfs(graph, start, goal, positions):
         if node == goal:
             return visited_order, path
 
-        for neighbor in sorted(graph.get(node, [])):  # Sort for consistent behavior
+        for neighbor in sorted(graph.get(node, [])):
             if neighbor not in visited:
                 new_path = path + [neighbor]
                 heapq.heappush(pq, (heuristic(neighbor, goal), new_path))
@@ -209,7 +197,7 @@ def dls(graph, start, goal, depth_limit):
 
 def iddfs(graph, start, goal):
     visited_order_total = []
-    for depth_limit in range(len(graph) + 1):  # Iterate up to a max depth
+    for depth_limit in range(len(graph) + 1):
         visited_this_run = set()
         stack = [(start, [start], 0)]
 
@@ -230,3 +218,26 @@ def iddfs(graph, start, goal):
                             stack.append((neighbor, path + [neighbor], depth + 1))
 
     return visited_order_total, []
+
+def hill_climbing(graph, start, node_values):
+    path = [start]
+    current_node = start
+
+    while True:
+        neighbors = graph.get(current_node, [])
+        if not neighbors:
+            break
+
+        best_neighbor = None
+        current_value = node_values[current_node]['value']
+        for neighbor in neighbors:
+            if node_values[neighbor]['value'] > current_value:
+                if best_neighbor is None or node_values[neighbor]['value'] > node_values[best_neighbor]['value']:
+                    best_neighbor = neighbor
+
+        if best_neighbor is None:
+            break
+        else:
+            path.append(best_neighbor)
+            current_node = best_neighbor
+    return path, [path[-1]]
