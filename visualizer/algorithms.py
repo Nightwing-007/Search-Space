@@ -183,3 +183,50 @@ def greedy_bfs(graph, start, goal, positions):
                 heapq.heappush(pq, (heuristic(neighbor, goal), new_path))
 
     return visited_order, []
+
+def dls(graph, start, goal, depth_limit):
+    visited = set()
+    stack = [(start, [start], 0)]  # (node, path, depth)
+    visited_order = []
+
+    while stack:
+        node, path, depth = stack.pop()
+
+        if node not in visited:
+            visited.add(node)
+            visited_order.append(node)
+
+            if node == goal:
+                return visited_order, path
+
+            if depth < depth_limit:
+                for neighbor in reversed(graph.get(node, [])):
+                    if neighbor not in visited:
+                        stack.append((neighbor, path + [neighbor], depth + 1))
+
+    return visited_order, []
+
+
+def iddfs(graph, start, goal):
+    visited_order_total = []
+    for depth_limit in range(len(graph) + 1):  # Iterate up to a max depth
+        visited_this_run = set()
+        stack = [(start, [start], 0)]
+
+        while stack:
+            node, path, depth = stack.pop()
+
+            if node not in visited_this_run:
+                visited_this_run.add(node)
+                if node not in visited_order_total:
+                    visited_order_total.append(node)
+
+                if node == goal:
+                    return visited_order_total, path
+
+                if depth < depth_limit:
+                    for neighbor in reversed(graph.get(node, [])):
+                        if neighbor not in visited_this_run:
+                            stack.append((neighbor, path + [neighbor], depth + 1))
+
+    return visited_order_total, []

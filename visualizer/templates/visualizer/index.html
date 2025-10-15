@@ -41,13 +41,17 @@
                 <h2 class="font-semibold text-gray-400 uppercase tracking-wider text-sm">Search Configuration</h2>
                 <div class="space-y-2">
                     <label for="algorithm-select" class="text-sm font-medium">Algorithm</label>
-                    <select id="algorithm-select" class="w-full bg-[#1e2347] border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-violet-500 focus:outline-none">
-                        <option value="bfs">Breadth-First Search (BFS)</option>
-                        <option value="dfs">Depth-First Search (DFS)</option>
-                        <option value="astar">A* Search</option>
-                        <option value="dijkstra">Dijkstra's Algorithm</option>
-                        <option value="greedy">Greedy Best-First Search</option>
-                    </select>
+                        <select id="algorithm-select" class="w-full ...">
+                            <option value="bfs">Breadth-First Search (BFS)</option>
+                            <option value="dfs">Depth-First Search (DFS)</option>
+                            <option value="dls">Depth-Limited Search (DLS)</option> <option value="iddfs">Iterative Deepening (IDDFS)</option> <option value="dijkstra">Dijkstra's Algorithm</option>
+                            <option value="greedy">Greedy Best-First Search</option>
+                            <option value="astar">A* Search</option>
+                        </select>
+                </div>
+                <div id="depth-limit-container" class="space-y-2 hidden">
+                    <label for="depth-limit-input" class="text-sm font-medium">Depth Limit</label>
+                    <input type="number" id="depth-limit-input" value="3" class="w-full bg-[#1e2347] border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-violet-500 focus:outline-none">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-2">
@@ -108,15 +112,15 @@
         const graphContainer = document.getElementById('graph-container');
         const statusMessage = document.getElementById('status-message');
         const rulesInput = document.getElementById('rules-input');
-
-        // New button selectors
         const nextStepBtn = document.getElementById('next-step-btn');
         const resetBtn = document.getElementById('reset-btn');
 
-        let graphData = null;
+        // --- ADD THESE NEW SELECTORS ---
+        const depthLimitContainer = document.getElementById('depth-limit-container');
+        const depthLimitInput = document.getElementById('depth-limit-input');
+        // --- END NEW SELECTORS ---
 
-        // --- NEW: State Management ---
-        // This object will hold the visualization progress
+        let graphData = null;
         let vizState = {
             visitedOrder: [],
             path: [],
@@ -124,23 +128,15 @@
             isComplete: true,
         };
 
-        // --- UTILITY FUNCTIONS ---
-        function getCsrfToken() {
-            return document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-        }
-
-        // --- GRAPH RENDERING (Unchanged) ---
+        // --- UTILITY & RENDERING FUNCTIONS (Unchanged) ---
+        function getCsrfToken() { return document.querySelector('input[name="csrfmiddlewaretoken"]').value; }
         function renderGraph() {
-            // ... (Your existing renderGraph function code goes here. No changes needed.)
-            // For brevity, it's omitted here, but make sure your full function is present.
             if (!graphData || !graphData.nodes || !graphData.edges) {
                 graphContainer.innerHTML = '<p class="text-gray-500 text-center">Upload a graph file to begin.</p>';
                 return;
             }
-            graphContainer.innerHTML = '';
-            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            svg.setAttribute('width', '100%');
-            svg.setAttribute('height', '100%');
+            graphContainer.innerHTML = ''; const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute('width', '100%'); svg.setAttribute('height', '100%');
             let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
             Object.values(graphData.nodes).forEach(n => {
                 if (n.x < minX) minX = n.x; if (n.x > maxX) maxX = n.x;
@@ -149,8 +145,7 @@
             const padding = 50;
             svg.setAttribute('viewBox', `${minX - padding} ${minY - padding} ${(maxX - minX) + padding*2} ${(maxY - minY) + padding*2}`);
             graphContainer.appendChild(svg);
-            const edgeGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
-            svg.appendChild(edgeGroup);
+            const edgeGroup = document.createElementNS("http://www.w3.org/2000/svg", "g"); svg.appendChild(edgeGroup);
             graphData.edges.forEach(edge => {
                 const [u, v] = edge; const nodeU = graphData.nodes[u]; const nodeV = graphData.nodes[v]; if (!nodeU || !nodeV) return;
                 const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
@@ -158,8 +153,7 @@
                 line.setAttribute('stroke', '#4A5568'); line.setAttribute('stroke-width', '2'); line.id = `edge-${u}-${v}`;
                 edgeGroup.appendChild(line);
             });
-            const nodeGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
-            svg.appendChild(nodeGroup);
+            const nodeGroup = document.createElementNS("http://www.w3.org/2000/svg", "g"); svg.appendChild(nodeGroup);
             Object.keys(graphData.nodes).forEach(nodeId => {
                 const node = graphData.nodes[nodeId]; const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
                 g.id = `node-${nodeId}`; g.style.cursor = 'pointer';
@@ -174,85 +168,51 @@
             });
         }
 
-        // --- NEW: Visualization Logic ---
+        // --- VISUALIZATION LOGIC (Unchanged) ---
         function setupVisualization(results) {
-            vizState.visitedOrder = results.visited_order;
-            vizState.path = results.path_to_goal;
-            vizState.currentIndex = 0;
-            vizState.isComplete = false;
-
-            // Update UI state
-            runSearchBtn.disabled = true;
-            runSearchBtn.classList.add('cursor-not-allowed', 'bg-gray-500');
-            nextStepBtn.disabled = false;
-            nextStepBtn.classList.remove('cursor-not-allowed', 'bg-gray-500');
+            vizState.visitedOrder = results.visited_order; vizState.path = results.path_to_goal;
+            vizState.currentIndex = 0; vizState.isComplete = false;
+            runSearchBtn.disabled = true; runSearchBtn.classList.add('cursor-not-allowed', 'bg-gray-500');
+            nextStepBtn.disabled = false; nextStepBtn.classList.remove('cursor-not-allowed', 'bg-gray-500');
             nextStepBtn.classList.add('bg-green-600', 'hover:bg-green-700');
-            resetBtn.disabled = false;
-            resetBtn.classList.remove('cursor-not-allowed');
-
+            resetBtn.disabled = false; resetBtn.classList.remove('cursor-not-allowed');
             statusMessage.innerText = 'Ready! Click "Next Step" to begin.';
         }
-
         function handleNextStep() {
             if (vizState.isComplete) return;
-
-            // Highlight the current node
             const nodeId = vizState.visitedOrder[vizState.currentIndex];
             const nodeElement = document.querySelector(`#node-${nodeId} circle`);
-            if (nodeElement) {
-                nodeElement.setAttribute('fill', '#6B46C1'); // Visited color
-            }
-
+            if (nodeElement) { nodeElement.setAttribute('fill', '#6B46C1'); }
             statusMessage.innerText = `Step ${vizState.currentIndex + 1} / ${vizState.visitedOrder.length}: Visiting node ${nodeId}`;
-
             vizState.currentIndex++;
-
-            // Check if the search animation is complete
             if (vizState.currentIndex >= vizState.visitedOrder.length) {
-                vizState.isComplete = true;
-                nextStepBtn.disabled = true;
+                vizState.isComplete = true; nextStepBtn.disabled = true;
                 nextStepBtn.classList.add('cursor-not-allowed', 'bg-gray-500');
                 nextStepBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
-
                 highlightFinalPath();
             }
         }
-
         function highlightFinalPath() {
             if (vizState.path && vizState.path.length > 0) {
                 statusMessage.innerText = 'Path found! Highlighting...';
                 vizState.path.forEach(nodeId => {
                     const nodeElement = document.querySelector(`#node-${nodeId} circle`);
-                    if (nodeElement) {
-                        nodeElement.setAttribute('fill', '#38A169'); // Path color
-                    }
+                    if (nodeElement) { nodeElement.setAttribute('fill', '#38A169'); }
                 });
-            } else {
-                statusMessage.innerText = 'Search complete. No path found.';
-            }
+            } else { statusMessage.innerText = 'Search complete. No path found.'; }
         }
-
         function resetVisualization() {
-            renderGraph(); // Reset colors
+            renderGraph();
             vizState = { visitedOrder: [], path: [], currentIndex: 0, isComplete: true };
-
-            // Reset UI state
-            runSearchBtn.disabled = false;
-            runSearchBtn.classList.remove('cursor-not-allowed', 'bg-gray-500');
-
-            nextStepBtn.disabled = true;
-            nextStepBtn.classList.add('cursor-not-allowed', 'bg-gray-500');
+            runSearchBtn.disabled = false; runSearchBtn.classList.remove('cursor-not-allowed', 'bg-gray-500');
+            nextStepBtn.disabled = true; nextStepBtn.classList.add('cursor-not-allowed', 'bg-gray-500');
             nextStepBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
-
-            resetBtn.disabled = true;
-            resetBtn.classList.add('cursor-not-allowed');
-
+            resetBtn.disabled = true; resetBtn.classList.add('cursor-not-allowed');
             statusMessage.innerText = '';
         }
 
-        // --- MODIFIED: Event Listeners ---
+        // --- EVENT LISTENERS ---
         graphFileInput.addEventListener('change', (event) => {
-            // ... (This function remains unchanged)
             const file = event.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -262,21 +222,35 @@
             reader.readAsText(file);
         });
 
+        // --- ADD THIS NEW EVENT LISTENER ---
+        algorithmSelect.addEventListener('change', () => {
+            if (algorithmSelect.value === 'dls') {
+                depthLimitContainer.classList.remove('hidden');
+            } else {
+                depthLimitContainer.classList.add('hidden');
+            }
+        });
+        // --- END NEW EVENT LISTENER ---
+
         runSearchBtn.addEventListener('click', async () => {
             if (!graphData) {
                 statusMessage.innerText = 'Please load a graph first.';
                 return;
             }
-            resetVisualization(); // Reset before a new search
+            resetVisualization();
 
+            // --- UPDATE THIS PAYLOAD OBJECT ---
             const payload = {
-                graph_data: graphData, algorithm: algorithmSelect.value,
-                start_node: startNodeInput.value, goal_node: goalNodeInput.value,
+                graph_data: graphData,
+                algorithm: algorithmSelect.value,
+                start_node: startNodeInput.value,
+                goal_node: goalNodeInput.value,
                 rules: rulesInput.value,
+                depth_limit: depthLimitInput.value // This line is now needed
             };
+            // --- END PAYLOAD UPDATE ---
 
             statusMessage.innerText = `Fetching path from server...`;
-
             try {
                 const response = await fetch('/api/run-search/', {
                     method: 'POST',
@@ -285,10 +259,7 @@
                 });
                 const results = await response.json();
                 if (!response.ok) { throw new Error(results.message || 'Server error.'); }
-
-                // Instead of animating, we set up the visualization
                 setupVisualization(results);
-
             } catch (error) {
                 console.error("Search failed:", error);
                 statusMessage.innerText = `Error: ${error.message}`;
@@ -298,7 +269,6 @@
         nextStepBtn.addEventListener('click', handleNextStep);
         resetBtn.addEventListener('click', resetVisualization);
         window.addEventListener('resize', renderGraph);
-
     </script>
 </body>
 </html>

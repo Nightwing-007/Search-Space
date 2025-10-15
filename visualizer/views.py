@@ -100,3 +100,56 @@ def run_search(request):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+
+
+# visualizer/views.py
+# ... (imports and index view are unchanged) ...
+
+def run_search(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            graph_data = data.get('graph_data')
+            algorithm = data.get('algorithm')
+            start_node = data.get('start_node')
+            goal_node = data.get('goal_node')
+            rules = data.get('rules')
+            depth_limit = data.get('depth_limit')  # Get the new parameter
+
+            # ... (validation and adjacency list creation is unchanged) ...
+            adjacency_list = {node: [] for node in graph_data['nodes']}
+            for edge in graph_data['edges']:
+                u, v = edge
+                if u in adjacency_list and v in adjacency_list:
+                    adjacency_list[u].append(v)
+                    adjacency_list[v].append(u)
+
+            visited_order = []
+            path_to_goal = []
+            positions = graph_data['nodes']
+
+            # ... (keep your existing if/elif blocks for bfs, dfs, astar, etc.) ...
+            if algorithm == 'bfs':
+                visited_order, path_to_goal = algorithms.bfs(adjacency_list, start_node, goal_node)
+            elif algorithm == 'dfs':
+                visited_order, path_to_goal = algorithms.dfs(adjacency_list, start_node, goal_node)
+            elif algorithm == 'astar':
+                visited_order, path_to_goal = algorithms.astar(adjacency_list, start_node, goal_node, positions, rules)
+            elif algorithm == 'dijkstra':
+                visited_order, path_to_goal = algorithms.dijkstra(adjacency_list, start_node, goal_node, positions)
+            elif algorithm == 'greedy':
+                visited_order, path_to_goal = algorithms.greedy_bfs(adjacency_list, start_node, goal_node, positions)
+
+            # --- START: ADD THESE NEW CONDITIONS ---
+            elif algorithm == 'dls':
+                limit = int(depth_limit) if depth_limit else len(adjacency_list)
+                visited_order, path_to_goal = algorithms.dls(adjacency_list, start_node, goal_node, limit)
+            elif algorithm == 'iddfs':
+                visited_order, path_to_goal = algorithms.iddfs(adjacency_list, start_node, goal_node)
+            # --- END: ADD THESE NEW CONDITIONS ---
+
+            return JsonResponse({'status': 'success', 'visited_order': visited_order, 'path_to_goal': path_to_goal})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+
