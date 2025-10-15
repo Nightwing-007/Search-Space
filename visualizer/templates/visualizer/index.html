@@ -8,73 +8,36 @@
     {% tailwind_css %}
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --theme-green: rgb(18, 178, 19);
-            --theme-green-dark: rgb(12, 120, 13);
-        }
         body { font-family: 'Roboto Mono', monospace; }
-        .sidebar {
-            background: rgba(5, 5, 5, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-right: 1px solid rgba(18, 178, 19, 0.3);
-        }
-        .control-btn {
-            background-color: transparent;
-            border: 1px solid var(--theme-green);
-            color: var(--theme-green);
-            transition: all 0.2s ease-in-out;
-        }
-        .control-btn:hover:not(:disabled) {
-            background-color: var(--theme-green);
-            color: black;
-            box-shadow: 0 0 15px rgba(18, 178, 19, 0.7);
-        }
-        .control-btn:disabled {
-            border-color: #4A5568;
-            color: #4A5568;
-            cursor: not-allowed;
-        }
-        .input-field {
-            background-color: #0A0A0A;
-            border: 1px solid #4A5568;
-            color: #E2E8F0;
-        }
-        .input-field:focus {
-            outline: none;
-            border-color: var(--theme-green);
-            box-shadow: 0 0 0 2px rgba(18, 178, 19, 0.5);
-        }
     </style>
 </head>
-<body class="bg-black text-gray-300 antialiased">
+<body class="bg-[rgb(0,0,0)] text-gray-300 antialiased">
     <div class="flex h-screen">
-        <aside class="w-80 sidebar p-6 flex flex-col space-y-6 overflow-y-auto">
+        <aside class="w-80 bg-black/70 backdrop-blur-sm border-r border-[rgb(18,178,19)]/30 p-6 flex flex-col space-y-4 overflow-y-auto">
             {% csrf_token %}
             <div class="flex justify-between items-center">
-                <h1 class="text-2xl font-bold text-[var(--theme-green)]">AI SearchLab</h1>
-                <a href="{% url 'logout' %}" class="text-sm text-red-400 hover:underline">Logout</a>
+                <h1 class="text-2xl font-bold text-[rgb(18,178,19)]">AI SearchLab</h1>
+                <a href="{% url 'logout' %}" class="text-sm text-red-500 hover:underline">Logout</a>
             </div>
 
             <div class="space-y-4">
-                <h2 class="font-semibold text-gray-400 uppercase tracking-widest text-xs">Graph Setup</h2>
+                <h2 class="font-semibold text-gray-500 uppercase tracking-widest text-xs">Graph Setup</h2>
                 <div class="space-y-3">
-                    <label for="graph-file-input" class="text-xs font-medium text-gray-400">Upload File</label>
-                    <input type="file" id="graph-file-input" accept=".json" class="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-transparent file:border file:border-[var(--theme-green)] file:text-[var(--theme-green)] hover:file:bg-[var(--theme-green)] hover:file:text-black cursor-pointer transition-colors duration-200"/>
-                    <label for="load-graph-select" class="text-xs font-medium text-gray-400">Load Saved</label>
-                    <select id="load-graph-select" class="w-full rounded-md p-2 input-field"><option value="">Select a graph...</option></select>
+                    <input type="file" id="graph-file-input" accept=".json" class="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border file:border-[rgb(18,178,19)]/50 file:text-sm file:font-semibold file:bg-transparent file:text-[rgb(18,178,19)]/80 hover:file:bg-[rgb(18,178,19)]/20 cursor-pointer transition-colors duration-200"/>
+                    <select id="load-graph-select" class="w-full rounded-md p-2 bg-black border border-gray-700 text-gray-300 focus:border-[rgb(18,178,19)] focus:ring-1 focus:ring-[rgb(18,178,19)] focus:outline-none">
+                        <option value="">Load Saved Graph...</option>
+                    </select>
                 </div>
                 <div class="flex items-center space-x-2">
-                    <input type="text" id="save-graph-name" class="w-full rounded-md p-2 input-field" placeholder="Graph Name...">
-                    <button id="save-graph-btn" class="font-bold py-2 px-4 rounded control-btn">Save</button>
+                    <input type="text" id="save-graph-name" class="w-full rounded-md p-2 bg-black border border-gray-700 text-gray-300 focus:border-[rgb(18,178,19)] focus:ring-1 focus:ring-[rgb(18,178,19)] focus:outline-none" placeholder="Enter graph name...">
+                    <button id="save-graph-btn" class="font-bold py-2 px-4 rounded border border-[rgb(18,178,19)] text-[rgb(18,178,19)] hover:bg-[rgb(18,178,19)] hover:text-black transition-all">Save</button>
                 </div>
             </div>
 
-            <div class="space-y-4">
-                <h2 class="font-semibold text-gray-400 uppercase tracking-widest text-xs">Configuration</h2>
+            <div class="space-y-4 border-t border-[rgb(18,178,19)]/20 pt-4">
+                <h2 class="font-semibold text-gray-500 uppercase tracking-widest text-xs">Configuration</h2>
                 <div class="space-y-3">
-                    <label for="algorithm-select" class="text-xs font-medium text-gray-400">Algorithm</label>
-                    <select id="algorithm-select" class="w-full rounded-md p-2 input-field">
+                    <select id="algorithm-select" class="w-full rounded-md p-2 bg-black border border-gray-700 text-gray-300 focus:border-[rgb(18,178,19)] focus:ring-1 focus:ring-[rgb(18,178,19)] focus:outline-none">
                         <option value="bfs">Breadth-First Search</option>
                         <option value="dfs">Depth-First Search</option>
                         <option value="dls">Depth-Limited Search</option>
@@ -85,102 +48,388 @@
                         <option value="hill_climbing">Hill Climbing</option>
                     </select>
                 </div>
-                <div id="depth-limit-container" class="space-y-2 hidden"><label for="depth-limit-input" class="text-xs font-medium text-gray-400">Depth Limit</label><input type="number" id="depth-limit-input" value="3" class="w-full rounded-md p-2 input-field"></div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-2"><label for="start-node-input" class="text-xs font-medium text-gray-400">Start</label><input type="text" id="start-node-input" class="w-full rounded-md p-2 input-field"></div>
-                    <div class="space-y-2"><label for="goal-node-input" class="text-xs font-medium text-gray-400">Goal</label><input type="text" id="goal-node-input" class="w-full rounded-md p-2 input-field"></div>
+                <div id="heuristic-container" class="space-y-3 hidden border-t border-gray-700 pt-3">
+                    <label class="text-xs font-medium text-gray-400">A* Heuristic</label>
+                    <div class="flex items-center space-x-4 text-sm">
+                        <label class="flex items-center"><input type="radio" name="heuristic" value="standard" checked class="mr-2 accent-[rgb(18,178,19)]">Standard</label>
+                        <label class="flex items-center"><input type="radio" name="heuristic" value="nn" class="mr-2 accent-[rgb(18,178,19)]">Learned (NN)</label>
+                    </div>
+                    <button id="train-btn" class="w-full font-bold py-2 px-4 rounded border border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-black transition-all hidden">Train for Goal</button>
                 </div>
-                <button id="run-search-btn" class="w-full font-bold py-2 px-4 rounded control-btn">Run Search</button>
+                <div id="depth-limit-container" class="space-y-2 hidden">
+                    <label for="depth-limit-input" class="text-xs font-medium text-gray-400">Depth Limit</label>
+                    <input type="number" id="depth-limit-input" value="3" class="w-full rounded-md p-2 bg-black border border-gray-700 text-gray-300 focus:border-[rgb(18,178,19)] focus:ring-1 focus:ring-[rgb(18,178,19)] focus:outline-none">
+                </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <button id="next-step-btn" disabled class="w-full font-bold py-2 px-4 rounded control-btn">Next</button>
-                    <button id="reset-btn" disabled class="w-full font-bold py-2 px-4 rounded control-btn">Reset</button>
+                    <div id="start-node-container"><input type="text" id="start-node-input" class="w-full rounded-md p-2 bg-black border border-gray-700 text-gray-300 focus:border-[rgb(18,178,19)] focus:ring-1 focus:ring-[rgb(18,178,19)] focus:outline-none" placeholder="Start"></div>
+                    <div id="goal-node-container"><input type="text" id="goal-node-input" class="w-full rounded-md p-2 bg-black border border-gray-700 text-gray-300 focus:border-[rgb(18,178,19)] focus:ring-1 focus:ring-[rgb(18,178,19)] focus:outline-none" placeholder="Goal"></div>
+                </div>
+                <button id="run-search-btn" class="w-full font-bold py-2 px-4 rounded border border-[rgb(18,178,19)] text-[rgb(18,178,19)] hover:bg-[rgb(18,178,19)] hover:text-black transition-all">Run Search</button>
+                <div class="grid grid-cols-2 gap-4">
+                    <button id="next-step-btn" disabled class="w-full font-bold py-2 px-4 rounded border border-gray-600 text-gray-600 cursor-not-allowed">Next</button>
+                    <button id="reset-btn" disabled class="w-full font-bold py-2 px-4 rounded border border-gray-600 text-gray-600 cursor-not-allowed">Reset</button>
                 </div>
             </div>
 
-            <div class="space-y-4">
-                 <h2 class="font-semibold text-gray-400 uppercase tracking-widest text-xs">Analysis & Logic</h2>
-                 <div class="space-y-2"><label for="rules-input" class="text-xs font-medium text-gray-400">Rules</label><textarea id="rules-input" rows="2" class="w-full rounded-md p-2 input-field" placeholder="e.g., AVOID(5)"></textarea></div>
+            <div class="space-y-4 border-t border-[rgb(18,178,19)]/20 pt-4">
+                <h2 class="font-semibold text-gray-500 uppercase tracking-widest text-xs">Analysis & Logic</h2>
+                <textarea id="rules-input" rows="2" class="w-full rounded-md p-2 bg-black border border-gray-700 text-gray-300 focus:border-[rgb(18,178,19)] focus:ring-1 focus:ring-[rgb(18,178,19)] focus:outline-none" placeholder="e.g., AVOID(5)"></textarea>
                 <div class="flex items-center space-x-2">
-                    <input type="number" id="clusters-input" value="3" class="w-full rounded-md p-2 input-field" placeholder="K">
-                    <button id="find-clusters-btn" class="w-full font-bold py-2 px-4 rounded control-btn">Clusters</button>
+                    <input type="number" id="clusters-input" value="3" class="w-full rounded-md p-2 bg-black border border-gray-700 text-gray-300 focus:border-[rgb(18,178,19)] focus:ring-1 focus:ring-[rgb(18,178,19)] focus:outline-none" placeholder="K">
+                    <button id="find-clusters-btn" class="w-full font-bold py-2 px-4 rounded border border-[rgb(18,178,19)] text-[rgb(18,178,19)] hover:bg-[rgb(18,178,19)] hover:text-black transition-all">Clusters</button>
                 </div>
             </div>
-            <div id="status-message" class="text-center text-sm text-[var(--theme-green)] h-5 mt-auto"></div>
+            <div id="status-message" class="text-center text-sm text-[rgb(18,178,19)] h-5 mt-auto"></div>
         </aside>
 
-        <main class="flex-1 p-6"><div id="graph-container" class="w-full h-full bg-black rounded-lg border-2 border-dashed border-gray-800 overflow-hidden relative flex items-center justify-center"><p class="text-gray-600">Welcome, {{ user.username }}.</p></div></main>
+        <main class="flex-1 p-6">
+            <div id="graph-container" class="w-full h-full bg-black rounded-lg border-2 border-dashed border-gray-800 overflow-hidden relative flex items-center justify-center">
+                <p class="text-gray-600">Welcome, {{ user.username }}.</p>
+            </div>
+        </main>
     </div>
 
     <script>
         const THEME_GREEN = 'rgb(18, 178, 19)';
         const THEME_GREEN_VISITED = 'rgb(12, 120, 13)';
         const THEME_GREEN_PATH = 'rgb(50, 255, 50)';
-        const graphFileInput=document.getElementById('graph-file-input'),algorithmSelect=document.getElementById('algorithm-select'),startNodeInput=document.getElementById('start-node-input'),goalNodeInput=document.getElementById('goal-node-input'),runSearchBtn=document.getElementById('run-search-btn'),graphContainer=document.getElementById('graph-container'),statusMessage=document.getElementById('status-message'),rulesInput=document.getElementById('rules-input'),nextStepBtn=document.getElementById('next-step-btn'),resetBtn=document.getElementById('reset-btn'),depthLimitContainer=document.getElementById('depth-limit-container'),depthLimitInput=document.getElementById('depth-limit-input'),saveGraphNameInput=document.getElementById('save-graph-name'),saveGraphBtn=document.getElementById('save-graph-btn'),loadGraphSelect=document.getElementById('load-graph-select'),findClustersBtn=document.getElementById('find-clusters-btn'),clustersInput=document.getElementById('clusters-input');
 
-        let graphData = null, savedGraphs = [], vizState = { visitedOrder: [], path: [], currentIndex: 0, isComplete: true };
+        const graphFileInput = document.getElementById('graph-file-input');
+        const algorithmSelect = document.getElementById('algorithm-select');
+        const startNodeInput = document.getElementById('start-node-input');
+        const goalNodeInput = document.getElementById('goal-node-input');
+        const runSearchBtn = document.getElementById('run-search-btn');
+        const graphContainer = document.getElementById('graph-container');
+        const statusMessage = document.getElementById('status-message');
+        const rulesInput = document.getElementById('rules-input');
+        const nextStepBtn = document.getElementById('next-step-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const depthLimitContainer = document.getElementById('depth-limit-container');
+        const depthLimitInput = document.getElementById('depth-limit-input');
+        const saveGraphNameInput = document.getElementById('save-graph-name');
+        const saveGraphBtn = document.getElementById('save-graph-btn');
+        const loadGraphSelect = document.getElementById('load-graph-select');
+        const findClustersBtn = document.getElementById('find-clusters-btn');
+        const clustersInput = document.getElementById('clusters-input');
+        const heuristicContainer = document.getElementById('heuristic-container');
+        const trainBtn = document.getElementById('train-btn');
+        const heuristicRadios = document.querySelectorAll('input[name="heuristic"]');
+        const startNodeContainer = document.getElementById('start-node-container');
+        const goalNodeContainer = document.getElementById('goal-node-container');
+
+        let graphData = null;
+        let savedGraphs = [];
+        let vizState = { visitedOrder: [], path: [], currentIndex: 0, isComplete: true };
 
         function getCsrfToken() { return document.querySelector('input[name="csrfmiddlewaretoken"]').value; }
 
         function renderGraph() {
             if (!graphData || !graphData.nodes) {
-                graphContainer.innerHTML = `<p class="text-gray-600">Welcome, {{ user.username }}.</p>`; return;
+                graphContainer.innerHTML = `<p class="text-gray-600">Welcome, {{ user.username }}.</p>`;
+                return;
             }
             const clusterColors = ['#4299E1', '#48BB78', '#ED8936', '#F56565', '#9F7AEA', '#ECC94B'];
-            graphContainer.innerHTML = ''; const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            svg.setAttribute('width', '100%'); svg.setAttribute('height', '100%');
+            graphContainer.innerHTML = '';
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute('width', '100%');
+            svg.setAttribute('height', '100%');
             let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
             Object.values(graphData.nodes).forEach(n => {
                 if (n.x < minX) minX = n.x; if (n.x > maxX) maxX = n.x;
                 if (n.y < minY) minY = n.y; if (n.y > maxY) maxY = n.y;
             });
             const padding = 50;
-            svg.setAttribute('viewBox', `${minX - padding} ${minY - padding} ${maxX - minX + padding*2} ${maxY - minY + padding*2}`);
+            svg.setAttribute('viewBox', `${minX - padding} ${minY - padding} ${maxX - minX + (padding * 2)} ${maxY - minY + (padding * 2)}`);
             graphContainer.appendChild(svg);
-            const edgeGroup = document.createElementNS("http://www.w3.org/2000/svg", "g"); svg.appendChild(edgeGroup);
+            const edgeGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            svg.appendChild(edgeGroup);
             graphData.edges.forEach(edge => {
-                const [u, v] = edge; const nodeU = graphData.nodes[u]; const nodeV = graphData.nodes[v]; if (!nodeU || !nodeV) return;
+                const [u, v] = edge;
+                const nodeU = graphData.nodes[u];
+                const nodeV = graphData.nodes[v];
+                if (!nodeU || !nodeV) return;
                 const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                line.setAttribute('x1', nodeU.x); line.setAttribute('y1', nodeU.y); line.setAttribute('x2', nodeV.x); line.setAttribute('y2', nodeV.y);
-                line.setAttribute('stroke', '#2D3748'); line.setAttribute('stroke-width', '2'); line.id = `edge-${u}-${v}`;
+                line.setAttribute('x1', nodeU.x); line.setAttribute('y1', nodeU.y);
+                line.setAttribute('x2', nodeV.x); line.setAttribute('y2', nodeV.y);
+                line.setAttribute('stroke', '#2D3748'); line.setAttribute('stroke-width', '2');
+                line.id = `edge-${u}-${v}`;
                 edgeGroup.appendChild(line);
             });
-            const nodeGroup = document.createElementNS("http://www.w3.org/2000/svg", "g"); svg.appendChild(nodeGroup);
+            const nodeGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            svg.appendChild(nodeGroup);
             Object.keys(graphData.nodes).forEach(nodeId => {
-                const node = graphData.nodes[nodeId]; const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                const node = graphData.nodes[nodeId];
+                const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
                 g.id = `node-${nodeId}`; g.style.cursor = 'pointer';
                 const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                circle.setAttribute('cx', node.x); circle.setAttribute('cy', node.y); circle.setAttribute('r', '15');
+                circle.setAttribute('cx', node.x); circle.setAttribute('cy', node.y);
+                circle.setAttribute('r', '15');
                 if (node.cluster_id !== undefined) {
                     circle.setAttribute('fill', clusterColors[node.cluster_id % clusterColors.length]);
                 } else {
                     circle.setAttribute('fill', 'black');
                 }
-                circle.setAttribute('stroke', THEME_GREEN); circle.setAttribute('stroke-width', '2');
-                circle.style.transition = 'all 0.3s ease'; g.appendChild(circle);
+                circle.setAttribute('stroke', THEME_GREEN);
+                circle.setAttribute('stroke-width', '2');
+                circle.style.transition = 'all 0.3s ease';
+                g.appendChild(circle);
                 const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                text.setAttribute('x', node.x); text.setAttribute('y', node.y); text.setAttribute('text-anchor', 'middle');
-                text.setAttribute('dy', '.3em'); text.setAttribute('fill', 'white'); text.setAttribute('font-size', '14px');
-                text.textContent = nodeId; g.appendChild(text); nodeGroup.appendChild(g);
+                text.setAttribute('x', node.x); text.setAttribute('y', node.y);
+                text.setAttribute('text-anchor', 'middle'); text.setAttribute('dy', '.3em');
+                text.setAttribute('fill', 'white'); text.setAttribute('font-size', '14px');
+                text.textContent = nodeId;
+                g.appendChild(text);
+                nodeGroup.appendChild(g);
             });
         }
-        function setupVisualization(results){vizState.visitedOrder=results.visited_order;vizState.path=results.path_to_goal;vizState.currentIndex=0;vizState.isComplete=false;runSearchBtn.disabled=true;nextStepBtn.disabled=false;resetBtn.disabled=false;statusMessage.innerText='Ready! Click "Next" to begin.'}
-        function handleNextStep(){if(vizState.isComplete)return;const nodeId=vizState.visitedOrder[vizState.currentIndex];const nodeElement=document.querySelector(`#node-${nodeId} circle`);if(nodeElement){nodeElement.setAttribute('fill',THEME_GREEN_VISITED)}statusMessage.innerText=`Step ${vizState.currentIndex+1}/${vizState.visitedOrder.length}: Visiting ${nodeId}`;vizState.currentIndex++;if(vizState.currentIndex>=vizState.visitedOrder.length){vizState.isComplete=true;nextStepBtn.disabled=true;highlightFinalPath()}}
-        function highlightFinalPath(){if(vizState.path&&vizState.path.length>0){statusMessage.innerText='Path found!';vizState.path.forEach(nodeId=>{const nodeElement=document.querySelector(`#node-${nodeId} circle`);if(nodeElement){nodeElement.setAttribute('fill',THEME_GREEN);nodeElement.setAttribute('stroke',THEME_GREEN_PATH);nodeElement.style.boxShadow = `0 0 20px ${THEME_GREEN_PATH}`}})}else{statusMessage.innerText='Search complete. Path not found.'}}
-        function resetVisualization(){if(graphData){Object.keys(graphData.nodes).forEach(nodeId=>delete graphData.nodes[nodeId].cluster_id)}renderGraph();vizState={visitedOrder:[],path:[],currentIndex:0,isComplete:true};runSearchBtn.disabled=false;nextStepBtn.disabled=true;resetBtn.disabled=true;statusMessage.innerText=''}
-        async function findClusters() { /* ... function is unchanged ... */ }
-        async function loadUserGraphs() { /* ... function is unchanged ... */ }
 
-        async function findClusters(){if(!graphData){statusMessage.innerText='Load a graph first.';return}const k=clustersInput.value;statusMessage.innerText=`Finding ${k} clusters...`;try{const response=await fetch('/api/find-clusters/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCsrfToken()},body:JSON.stringify({graph_data:graphData,k:k})});const result=await response.json();if(!response.ok){throw new Error(result.message||'Clustering failed.')}graphData=result.graph_data;renderGraph();statusMessage.innerText=`Found ${k} clusters.`}catch(error){console.error("Clustering failed:",error);statusMessage.innerText=`Error: ${error.message}`}}
-        async function loadUserGraphs(){try{const response=await fetch('/api/get-graphs/');if(!response.ok)return;const data=await response.json();savedGraphs=data.graphs;loadGraphSelect.innerHTML='<option value="">Select a graph...</option>';savedGraphs.forEach(graph=>{const option=document.createElement('option');option.value=graph.id;option.textContent=graph.name;loadGraphSelect.appendChild(option)})}catch(e){console.error("Could not load graphs")}}
+        function setupVisualization(results) {
+            vizState.visitedOrder = results.visited_order;
+            vizState.path = results.path_to_goal;
+            vizState.currentIndex = 0;
+            vizState.isComplete = false;
+            runSearchBtn.disabled = true;
+            nextStepBtn.disabled = false;
+            resetBtn.disabled = false;
+            statusMessage.innerText = 'Ready! Click "Next" to begin.';
+            nextStepBtn.classList.remove("text-gray-600", "border-gray-600");
+            nextStepBtn.classList.add("text-[rgb(18,178,19)]", "border-[rgb(18,178,19)]");
+            resetBtn.classList.remove("text-gray-600", "border-gray-600");
+            resetBtn.classList.add("text-red-500", "border-red-500");
+        }
 
-        const goalNodeContainer = document.getElementById('goal-node-input').parentElement;
+        function handleNextStep() {
+            if (vizState.isComplete) return;
+            const nodeId = vizState.visitedOrder[vizState.currentIndex];
+            const nodeElement = document.querySelector(`#node-${nodeId} circle`);
+            if (nodeElement) {
+                nodeElement.setAttribute('fill', THEME_GREEN_VISITED);
+            }
+            statusMessage.innerText = `Step ${vizState.currentIndex + 1}/${vizState.visitedOrder.length}: Visiting ${nodeId}`;
+            vizState.currentIndex++;
+            if (vizState.currentIndex >= vizState.visitedOrder.length) {
+                vizState.isComplete = true;
+                nextStepBtn.disabled = true;
+                highlightFinalPath();
+                nextStepBtn.classList.add("text-gray-600", "border-gray-600");
+                nextStepBtn.classList.remove("text-[rgb(18,178,19)]", "border-[rgb(18,178,19)]");
+            }
+        }
+
+        function highlightFinalPath() {
+            if (vizState.path && vizState.path.length > 0) {
+                statusMessage.innerText = 'Path found!';
+                vizState.path.forEach(nodeId => {
+                    const nodeElement = document.querySelector(`#node-${nodeId} circle`);
+                    if (nodeElement) {
+                        nodeElement.setAttribute('fill', THEME_GREEN);
+                        nodeElement.setAttribute('stroke', THEME_GREEN_PATH);
+                    }
+                });
+            } else {
+                statusMessage.innerText = 'Search complete. Path not found.';
+            }
+        }
+
+        function resetVisualization() {
+            if (graphData) {
+                Object.keys(graphData.nodes).forEach(nodeId => delete graphData.nodes[nodeId].cluster_id);
+            }
+            renderGraph();
+            vizState = { visitedOrder: [], path: [], currentIndex: 0, isComplete: true };
+            runSearchBtn.disabled = false;
+            nextStepBtn.disabled = true;
+            resetBtn.disabled = true;
+            statusMessage.innerText = '';
+            nextStepBtn.classList.add("text-gray-600", "border-gray-600");
+            nextStepBtn.classList.remove("text-[rgb(18,178,19)]", "border-[rgb(18,178,19)]");
+            resetBtn.classList.add("text-gray-600", "border-gray-600");
+            resetBtn.classList.remove("text-red-500", "border-red-500");
+        }
+
+        async function findClusters() {
+            if (!graphData) {
+                statusMessage.innerText = 'Load a graph first.';
+                return;
+            }
+            const k = clustersInput.value;
+            statusMessage.innerText = `Finding ${k} clusters...`;
+            try {
+                const response = await fetch('/api/find-clusters/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                    body: JSON.stringify({ graph_data: graphData, k: k })
+                });
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.message || 'Clustering failed.');
+                }
+                graphData = result.graph_data;
+                renderGraph();
+                statusMessage.innerText = `Found ${k} clusters.`;
+            } catch (error) {
+                console.error("Clustering failed:", error);
+                statusMessage.innerText = `Error: ${error.message}`;
+            }
+        }
+
+        async function loadUserGraphs() {
+            try {
+                const response = await fetch('/api/get-graphs/');
+                if (!response.ok) return;
+                const data = await response.json();
+                savedGraphs = data.graphs;
+                loadGraphSelect.innerHTML = '<option value="">Select a graph...</option>';
+                savedGraphs.forEach(graph => {
+                    const option = document.createElement('option');
+                    option.value = graph.id;
+                    option.textContent = graph.name;
+                    loadGraphSelect.appendChild(option);
+                });
+            } catch (e) {
+                console.error("Could not load graphs");
+            }
+        }
+
+        async function trainHeuristic() {
+            if (!graphData || !goalNodeInput.value) {
+                statusMessage.innerText = 'Load graph & set Goal to train.';
+                return;
+            }
+            statusMessage.innerText = 'Training Neural Network...';
+            trainBtn.disabled = true;
+            trainBtn.innerText = 'Training...';
+            try {
+                const response = await fetch('/api/train-heuristic/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                    body: JSON.stringify({ graph_data: graphData, goal_node: goalNodeInput.value })
+                });
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.message || 'Training failed.');
+                }
+                statusMessage.innerText = result.message;
+                runSearchBtn.disabled = false;
+            } catch (error) {
+                statusMessage.innerText = `Error: ${error.message}`;
+            } finally {
+                trainBtn.disabled = false;
+                trainBtn.innerText = 'Train for Goal';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadUserGraphs);
+
+        graphFileInput.addEventListener('change', e => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                try {
+                    graphData = JSON.parse(e.target.result);
+                    resetVisualization();
+                    saveGraphNameInput.value = file.name.replace('.json', '');
+                } catch (error) {
+                    statusMessage.innerText = 'Error: Invalid JSON file.';
+                    graphData = null;
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        loadGraphSelect.addEventListener('change', () => {
+            const selectedId = loadGraphSelect.value;
+            if (!selectedId) return;
+            const selectedGraph = savedGraphs.find(g => g.id == selectedId);
+            if (selectedGraph) {
+                graphData = selectedGraph.graph_data;
+                resetVisualization();
+                saveGraphNameInput.value = selectedGraph.name;
+                statusMessage.innerText = `Loaded '${selectedGraph.name}'.`;
+            }
+        });
+
+        saveGraphBtn.addEventListener('click', async () => {
+            const name = saveGraphNameInput.value;
+            if (!name || !graphData) {
+                statusMessage.innerText = 'Enter name & load graph to save.';
+                return;
+            }
+            const payload = { name, graph_data: graphData };
+            const response = await fetch('/api/save-graph/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                body: JSON.stringify(payload)
+            });
+            const result = await response.json();
+            if (response.ok) {
+                statusMessage.innerText = result.message;
+                await loadUserGraphs();
+            } else {
+                statusMessage.innerText = `Error: ${result.message}`;
+            }
+        });
 
         algorithmSelect.addEventListener('change', () => {
-            depthLimitContainer.classList.toggle('hidden', algorithmSelect.value !== 'dls');
+            const isDLS = algorithmSelect.value === 'dls';
+            const isAStar = algorithmSelect.value === 'astar';
             const isHillClimbing = algorithmSelect.value === 'hill_climbing';
-            goalNodeContainer.classList.toggle('hidden', isHillClimbing);
+            depthLimitContainer.classList.toggle('hidden', !isDLS);
+            heuristicContainer.classList.toggle('hidden', !isAStar);
+            goalNodeContainer.parentElement.classList.toggle('hidden', isHillClimbing);
         });
-        document.addEventListener('DOMContentLoaded',loadUserGraphs);graphFileInput.addEventListener('change',e=>{const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{graphData=JSON.parse(e.target.result);resetVisualization();saveGraphNameInput.value=file.name.replace('.json','')}catch(error){statusMessage.innerText='Error: Invalid JSON file.';graphData=null}};reader.readAsText(file)});loadGraphSelect.addEventListener('change',()=>{const selectedId=loadGraphSelect.value;if(!selectedId)return;const selectedGraph=savedGraphs.find(g=>g.id==selectedId);if(selectedGraph){graphData=selectedGraph.graph_data;resetVisualization();saveGraphNameInput.value=selectedGraph.name;statusMessage.innerText=`Loaded '${selectedGraph.name}'.`}});saveGraphBtn.addEventListener('click',async()=>{const name=saveGraphNameInput.value;if(!name||!graphData){statusMessage.innerText='Enter name & load graph to save.';return}const payload={name,graph_data:graphData};const response=await fetch('/api/save-graph/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCsrfToken()},body:JSON.stringify(payload)});const result=await response.json();if(response.ok){statusMessage.innerText=result.message;await loadUserGraphs()}else{statusMessage.innerText=`Error: ${result.message}`}});algorithmSelect.addEventListener('change',()=>{depthLimitContainer.classList.toggle('hidden',algorithmSelect.value!=='dls')});runSearchBtn.addEventListener('click',async()=>{if(!graphData){statusMessage.innerText='Load a graph first.';return}resetVisualization();const payload={graph_data:graphData,algorithm:algorithmSelect.value,start_node:startNodeInput.value,goal_node:goalNodeInput.value,rules:rulesInput.value,depth_limit:depthLimitInput.value};statusMessage.innerText=`Fetching path...`;try{const response=await fetch('/api/run-search/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCsrfToken()},body:JSON.stringify(payload)});const results=await response.json();if(!response.ok){throw new Error(results.message||'Server error.')}setupVisualization(results)}catch(error){console.error("Search failed:",error);statusMessage.innerText=`Error: ${error.message}`}});nextStepBtn.addEventListener('click',handleNextStep);resetBtn.addEventListener('click',resetVisualization);findClustersBtn.addEventListener('click',findClusters);window.addEventListener('resize',renderGraph);
+
+        heuristicRadios.forEach(radio => {
+            radio.addEventListener('change', e => {
+                const showTrainBtn = e.target.value === 'nn';
+                trainBtn.classList.toggle('hidden', !showTrainBtn);
+                runSearchBtn.disabled = showTrainBtn;
+                if (showTrainBtn) {
+                    statusMessage.innerText = "Click 'Train for Goal' before search.";
+                }
+            });
+        });
+
+        trainBtn.addEventListener('click', trainHeuristic);
+
+        runSearchBtn.addEventListener('click', async () => {
+            if (!graphData) {
+                statusMessage.innerText = 'Load a graph first.';
+                return;
+            }
+            resetVisualization();
+            const payload = {
+                graph_data: graphData,
+                algorithm: algorithmSelect.value,
+                start_node: startNodeInput.value,
+                goal_node: goalNodeInput.value,
+                rules: rulesInput.value,
+                depth_limit: depthLimitInput.value,
+                heuristic_type: document.querySelector('input[name="heuristic"]:checked').value
+            };
+            statusMessage.innerText = `Fetching path...`;
+            try {
+                const response = await fetch('/api/run-search/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                    body: JSON.stringify(payload)
+                });
+                const results = await response.json();
+                if (!response.ok) {
+                    throw new Error(results.message || 'Server error.');
+                }
+                setupVisualization(results);
+            } catch (error) {
+                console.error("Search failed:", error);
+                statusMessage.innerText = `Error: ${error.message}`;
+            }
+        });
+
+        nextStepBtn.addEventListener('click', handleNextStep);
+        resetBtn.addEventListener('click', resetVisualization);
+        findClustersBtn.addEventListener('click', findClusters);
+        window.addEventListener('resize', renderGraph);
     </script>
 </body>
 </html>
