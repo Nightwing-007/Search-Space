@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+{% load static tailwind_tags %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><title>Register - AI SearchLab</title>
+    {% tailwind_css %}
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-[#0b0f29] text-gray-200 flex items-center justify-center h-screen">
+    <div class="w-full max-w-md p-8 space-y-6 bg-[#161a38] rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold text-center">Create an Account</h1>
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="space-y-1">
+                    <label for="{{ field.id_for_label }}" class="text-sm font-medium">{{ field.label }}</label>
+                    <input type="{{ field.field.widget.input_type }}" name="{{ field.name }}" id="{{ field.id_for_label }}"
+                        class="w-full bg-[#1e2347] border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-violet-500 focus:outline-none">
+                    {% if field.errors %}
+                        <p class="text-red-500 text-xs">{{ field.errors.as_text }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded-md">Register</button>
+        </form>
+        <p class="text-center text-sm">Already have an account? <a href="{% url 'login' %}" class="font-medium text-violet-400 hover:underline">Log in</a></p>
+    </div>
+</body>
+</html>
