@@ -74,7 +74,7 @@ def run_search(request):
                     model = keras.Sequential(
                         [layers.Dense(32, activation='relu', input_shape=[2]), layers.Dense(32, activation='relu'),
                          layers.Dense(1)])
-                    # This dummy build step is essential before loading weights
+
                     model.build(input_shape=(None, 2))
 
                     weights_as_lists = request.session['heuristic_model_weights']
