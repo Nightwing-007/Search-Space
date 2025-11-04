@@ -1,5 +1,3 @@
-# visualizer/views.py
-
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth import login, logout
@@ -8,21 +6,15 @@ from django.contrib.auth.forms import UserCreationForm
 import json
 import numpy as np
 from sklearn.cluster import KMeans
-import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
-
 from . import algorithms
 from .models import Graph
 
-
-# --- Main App View ---
 @login_required
 def index(request):
     return render(request, 'visualizer/index.html')
 
-
-# --- API Views ---
 @login_required
 def run_search(request):
     if request.method == 'POST':
@@ -89,7 +81,6 @@ def run_search(request):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
 
-
 @login_required
 def train_heuristic_model(request):
     if request.method == 'POST':
@@ -139,8 +130,6 @@ def train_heuristic_model(request):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
-
-# --- (All other views: find_clusters, save_graph, get_graphs, register_view, logout_view remain unchanged) ---
 @login_required
 def find_clusters(request):
     if request.method == 'POST':
@@ -161,7 +150,6 @@ def find_clusters(request):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
 
-
 @login_required
 def save_graph(request):
     if request.method == 'POST':
@@ -176,13 +164,11 @@ def save_graph(request):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
 
-
 @login_required
 def get_graphs(request):
     graphs = Graph.objects.filter(owner=request.user).order_by('-created_at')
     graph_list = [{'id': graph.id, 'name': graph.name, 'graph_data': graph.graph_data} for graph in graphs]
     return JsonResponse({'graphs': graph_list})
-
 
 def register_view(request):
     if request.method == 'POST':
@@ -194,7 +180,6 @@ def register_view(request):
     else:
         form = UserCreationForm()
     return render(request, 'visualizer/register.html', {'form': form})
-
 
 def logout_view(request):
     logout(request)
