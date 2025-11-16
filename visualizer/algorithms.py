@@ -1,10 +1,6 @@
-# visualizer/algorithms.py
-
 import heapq
 import math
 import numpy as np
-import tensorflow as tf
-
 
 def bfs(graph, start, goal):
     visited = set()

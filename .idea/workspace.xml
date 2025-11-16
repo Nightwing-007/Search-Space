@@ -5,15 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b6a24cff-ea9a-4744-ad5e-21e758790597" name="Changes" comment="updating README and workspace.xml">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/83701d1b-15bf-45d2-9159-eb34e903d03b.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/83701d1b-15bf-45d2-9159-eb34e903d03b/storage_v2/_src_/schema/main.uQUzAA.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/graph_dataset.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hill_climbing_2.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sample_1.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/AI_SearchLab.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/AI_SearchLab.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visualizer/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/visualizer/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/theme/static/css/dist/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/theme/static/css/dist/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/visualizer/algorithms.py" beforeDir="false" afterPath="$PROJECT_DIR$/visualizer/algorithms.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,6 +73,7 @@
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/School/Python/AIML_Project&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -143,6 +144,14 @@
       <workItem from="1762235908919" duration="2921000" />
       <workItem from="1762242105277" duration="597000" />
       <workItem from="1762244969673" duration="763000" />
+      <workItem from="1762661285509" duration="2692000" />
+      <workItem from="1762702964191" duration="309000" />
+      <workItem from="1762705725097" duration="462000" />
+      <workItem from="1762706944277" duration="4000" />
+      <workItem from="1762748896911" duration="591000" />
+      <workItem from="1762749506613" duration="463000" />
+      <workItem from="1762754831047" duration="1541000" />
+      <workItem from="1762763075822" duration="749000" />
     </task>
     <task id="LOCAL-00001" summary="updating README and workspace.xml">
       <option name="closed" value="true" />
